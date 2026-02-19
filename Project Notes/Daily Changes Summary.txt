@@ -1,0 +1,77 @@
+CoreBridge VIPER - Daily Changes Summary
+==========================================
+
+This file tracks changes made to the CoreBridge VIPER project organized by date.
+
+-------------------------------------------------------------------------------
+2026-02-18
+-------------------------------------------------------------------------------
+
+Vendor List (Vendors Page):
+- Replaced demo data with real starter vendor list (26 vendors: QuickBooks, Xero, SanMar, S&S Activewear, Google, Microsoft, Listen360, LoyaltyLoop, Nexio, Fiserv AUS/US, Stripe, Authorized.NET, EasyPost, TaxJar, Avalara, Zapier, XPS, Four51, XMPie, Pressero, SignPack, SalesHub, Gorilla Dash, Text Control, Qrvey) including Contact and Email
+- Added columns: NDA on file, Contract on file (Yes/No); later consolidated into single "On file" column with NDA and Contract badges (same pattern as CoreBridge badges)
+- Added columns: Pricing module (later renamed to Pricing), Has restrictions (later renamed to Restrictions)
+- Consolidated V2 and V3 into single "CoreBridge" column with V2 and V3 badges (green = authorized, gray = no, amber = pending); replaced separate V2/V3 filter dropdowns with one "CoreBridge" filter (All / V2 authorized / V3 authorized)
+- Pricing: choices set to Rev Share, Monthly API, Exempt, Exempt or N/A, Contract, N/A, Unknown; added badge styles per type; blank/N/A displayed as "—"
+- Restrictions: choices set to Franchise, Regional, No Restrictions (blank shown as "—"); added badge styles for Franchise and Regional
+- Applied user-provided pricing and restrictions data for all 26 vendors (Exempt, Rev Share, Contract, N/A; Franchise, Regional, or no restrictions)
+- Default sort: Vendors list sorted alphabetically by name (case-insensitive); filtered results also sorted alphabetically
+
+Integrations Page (redesign):
+- Redesigned as details-only page (no install, connect, sync, or disconnect actions)
+- Single merged list from V2 and V3 integration lists (31 integrations); each integration appears once with CoreBridge (V2/V3) badges
+- Columns: Name, Vendor, Product, CoreBridge (V2/V3 badges), Implementation status, Implemented by
+- Populated from user's V2 list (e.g. QuickBooks/Xero syncs, Avalara, TaxJar, LoyaltyLoop, Zapier, XPS, Four51, XMPie, Pressero, Nexio, Fiserv, Authorized.NET, Stripe, SignPack, SalesHub, Gorilla Dash) and V3 list (e.g. Text Control, Qrvey, SanMar, S&S Activewear, Google/Microsoft Calendar, Listen360, Gmail, Outlook, CoreBridge Shipping/Tax Lookup); no duplicate rows
+- Search by name, vendor, or product; filter by CoreBridge: All / V2 only / V3 only / V2 & V3
+- Implementation status and Implemented by use placeholders ("—") for future data
+- Default sort: Integrations list sorted alphabetically by name; filtered results also sorted alphabetically
+
+Home Dashboard:
+- Updated Integrations card to show 31 integrations and label "Integrations" with "View All →"
+
+Additional changes (same day):
+- Franchises page: New route /franchises and nav link; page similar to Vendors with table, search, and initial list (Big Frog, Fastsigns, Sign*A*Rama, Signs Express, SignWorld, Speedpro CA, Speedpro US). Home dashboard card added (7 franchises). Route uses direct component import to avoid build resolve issue.
+- Franchises columns: Added CoreBridge (V2/V3 badges), Contact, Email, and Actions (Edit) to match Vendors. Big Frog and Signs Express = V3 only; all others = both V2 and V3. Search by name, contact, or email; alphabetical sort.
+- Home dashboard: Recent Activity moved to a static full-width section below the partnership cards grid so it no longer shifts when adding more partnership options (Vendors, Integrations, Franchises).
+- Integrations page: Added "+ Add Integration" button in header (title row) and Edit action in new Actions column for each row; added corresponding button styles.
+- .gitignore: Updated POC-Vendor to match POC-Documents (node_modules/, dist/, .angular/, out-tsc/, tmp/, logs, OS files); scope limited to POC-Vendor only.
+
+-------------------------------------------------------------------------------
+2024-01-16 (or current date)
+-------------------------------------------------------------------------------
+
+Initial Setup:
+- Created Angular 17 project structure with Evo theme styling
+- Set up project configuration files (package.json, angular.json, tsconfig files)
+- Created application structure with standalone components
+
+Navigation:
+- Created main navigation component with Home, Vendors, Integrations routes
+- Implemented active route highlighting
+
+Pages Created:
+- Home Dashboard: Overview page with statistics cards and activity feed
+- Vendors Page: Vendor management with search, filtering, and table view (12 hard-coded demo vendors)
+- Integrations Page: Integration management with card-based layout (5 hard-coded demo integrations)
+
+Styling:
+- Implemented Evo theme styling aligned with end-web patterns
+- Created custom vendor-* class prefix (similar to POC-Documents doc-* pattern)
+- Applied Evo color tokens and spacing throughout
+
+Branding:
+- Rebranded from "Vendor Portal" to "CoreBridge VIPER"
+- Updated all references to include full name: "Vendor Integration, Partnerships & Enterprise Relationships"
+- Updated navigation, home page, integrations descriptions, and documentation
+
+Documentation:
+- Created README.md with project overview and setup instructions
+- Created this daily changes summary file
+
+-------------------------------------------------------------------------------
+
+Notes:
+- All data is currently hard-coded for demo purposes
+- API and database integration to be added in future phase
+- Styling follows end-web Evo theme patterns (evo-platform branch, src/Evo)
+
