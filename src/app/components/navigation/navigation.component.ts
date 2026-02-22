@@ -45,13 +45,15 @@ import { RouterModule } from '@angular/router';
       box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
     }
     .vendor-nav-container {
-      max-width: 1200px;
-      margin: 0 auto;
+      width: 100%;
+      max-width: none;
+      margin: 0;
       padding: 0 24px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       height: 64px;
+      box-sizing: border-box;
     }
     .vendor-nav-brand {
       display: flex;
@@ -97,6 +99,12 @@ import { RouterModule } from '@angular/router';
     .vendor-nav-links a.active {
       color: #1976d2;
       border-bottom-color: #1976d2;
+    }
+    @media (max-width: 768px) {
+      .vendor-nav-container { padding: 0 16px; }
+    }
+    @media (max-width: 576px) {
+      .vendor-nav-container { padding: 0 14px; }
     }
   `],
 })

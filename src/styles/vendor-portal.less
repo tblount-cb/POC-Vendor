@@ -1,7 +1,14 @@
 /**
- * Vendor Portal styling – aligned with end-web Evo (src/Evo, inline Tailwind, tailwind.scss).
- * Evo theme tokens below; POC uses vendor-* classes so we don't depend on end-web components.
+ * Vendor Portal styling – aligned with end-web Evo (sales/companies layout, gutter-side, page-header-container).
+ * Responsiveness: evo-style breakpoints (lg 992px, md 768px, sm 576px, xs 480px).
  */
+
+/* Breakpoints (align with end-web @screen-* usage) */
+@vendor-screen-lg: 992px;
+@vendor-screen-md: 768px;
+@vendor-screen-sm: 576px;
+@vendor-screen-xs: 480px;
+
 .vendor-portal {
   --vendor-panel-border: #E2E8F0;
   --vendor-text-muted: #64748b;
@@ -12,15 +19,137 @@
   --vendor-primary-hover: #1565c0;
 }
 
-/* Base page container */
+/* Full-width page container: uses full viewport, no max-width gaps */
 .vendor-page {
   --vendor-panel-border: #E2E8F0;
   --vendor-text-muted: #64748b;
   --vendor-text-body: #334155;
   --vendor-bg-subtle: #f8fafc;
   --vendor-focus-ring: #1976d2;
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 16px 24px;
+  background: #fff;
+  min-height: calc(100vh - 64px);
+  box-sizing: border-box;
+}
+@media (max-width: @vendor-screen-md) {
+  .vendor-page { padding: 12px 16px; }
+}
+@media (max-width: @vendor-screen-sm) {
+  .vendor-page { padding: 12px 14px; }
 }
 
-/* Navigation styles are inline in navigation.component.ts */
-/* Page styles are inline in each component for now */
+/* Evo-style gutter: consistent horizontal spacing + bottom padding (sales/companies base-company-edit) */
+.gutter-side {
+  padding-left: 0;
+  padding-right: 0;
+  padding-bottom: 24px;
+}
+@media (max-width: @vendor-screen-md) {
+  .gutter-side { padding-left: 0; padding-right: 0; }
+}
+
+/* Breadcrumbs – sales/companies pattern (cb-breadcrumbs equivalent) */
+.vendor-breadcrumbs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 0;
+  margin-bottom: 16px;
+  font-size: 14px;
+  color: var(--vendor-text-muted);
+}
+.vendor-breadcrumbs a {
+  color: #1976d2;
+  text-decoration: none;
+}
+.vendor-breadcrumbs a:hover {
+  text-decoration: underline;
+}
+.vendor-breadcrumbs-sep {
+  margin: 0 6px;
+  color: #cbd5e1;
+  user-select: none;
+}
+.vendor-breadcrumbs-current {
+  color: var(--vendor-text-body);
+  font-weight: 500;
+}
+
+/* Evo-style page header container: title + actions row (sales/companies page-header-container) */
+.page-header-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.page-header-container:last-child.gutter-side {
+  padding-bottom: 24px;
+}
+
+/* Title row: stack on small screens */
+@media (max-width: @vendor-screen-sm) {
+  .vendor-page-title-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+}
+
+/* Responsive: stack toolbar (search + filters) on small screens */
+@media (max-width: @vendor-screen-md) {
+  .vendor-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .vendor-toolbar .vendor-search-wrap {
+    min-width: 0;
+  }
+  .vendor-toolbar-actions {
+    flex-wrap: wrap;
+  }
+}
+
+/* Table: horizontal scroll on small viewports */
+.vendor-table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+@media (max-width: @vendor-screen-md) {
+  .vendor-table {
+    min-width: 800px;
+  }
+}
+
+/* Detail/settings page: constrain form width evo-style, responsive columns */
+.vendor-settings-page .vendor-settings-content.gutter-side {
+  max-width: 960px;
+}
+@media (max-width: @vendor-screen-sm) {
+  .vendor-detail-row {
+    flex-direction: column;
+    gap: 0;
+  }
+  .vendor-detail-col-left,
+  .vendor-detail-col-right {
+    min-width: 0;
+    flex: 1 1 100%;
+  }
+  .vendor-settings-field .vendor-settings-input {
+    max-width: 100%;
+  }
+}
+
+/* Tailwind-style responsive utilities (md = 768px) */
+@media (min-width: @vendor-screen-md) {
+  .md\:pb-6 {
+    padding-bottom: 1.5rem;
+  }
+  .md\:px-6 {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
 

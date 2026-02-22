@@ -1,33 +1,31 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-
-interface Franchise {
-  id: number;
-  name: string;
-  v2: boolean;
-  v3: boolean;
-  contact: string;
-  email: string;
-}
+import { RouterModule } from '@angular/router';
+import { FranchiseService, Franchise } from '../../services/franchise.service';
 
 @Component({
   selector: 'vendor-franchises',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterModule],
   template: `
     <div class="vendor-page">
-      <div class="vendor-page-header">
-        <div class="vendor-page-title-row">
-          <h1>Franchises</h1>
-          <button class="vendor-btn-primary">+ Add Franchise</button>
+      <nav class="vendor-breadcrumbs gutter-side" aria-label="Breadcrumb">
+        <a routerLink="/franchises">Franchises</a>
+      </nav>
+      <div class="page-header-container gutter-side">
+        <div class="vendor-page-header">
+          <div class="vendor-page-title-row">
+            <h1 class="vendor-page-title">Franchises</h1>
+            <a routerLink="/franchises/new" class="vendor-btn-primary">+ Add Franchise</a>
+          </div>
+          <p class="vendor-page-subtitle">
+            Manage franchise list for CoreBridge VIPER.
+          </p>
         </div>
-        <p class="vendor-page-subtitle">
-          Manage franchise list for CoreBridge VIPER.
-        </p>
       </div>
 
-      <div class="vendor-toolbar">
+      <div class="vendor-toolbar gutter-side">
         <div class="vendor-search-wrap">
           <span class="vendor-search-icon">🔍</span>
           <input
@@ -40,7 +38,7 @@ interface Franchise {
         </div>
       </div>
 
-      <div class="vendor-table-wrap">
+      <div class="vendor-table-wrap gutter-side">
         <table class="vendor-table">
           <thead>
             <tr>
@@ -67,7 +65,7 @@ interface Franchise {
               <td>{{ franchise.contact || '—' }}</td>
               <td>{{ franchise.email || '—' }}</td>
               <td>
-                <button class="vendor-btn-link">Edit</button>
+                <a [routerLink]="['/franchises', franchise.id]" class="vendor-btn-link">Edit</a>
               </td>
             </tr>
             <tr *ngIf="filteredFranchises.length === 0">
@@ -79,19 +77,12 @@ interface Franchise {
         </table>
       </div>
 
-      <div class="vendor-table-footer">
+      <div class="vendor-table-footer gutter-side">
         Showing {{ filteredFranchises.length }} of {{ franchises.length }} franchises
       </div>
     </div>
   `,
   styles: [`
-    .vendor-page {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 32px 24px;
-      background: #fff;
-      min-height: calc(100vh - 64px);
-    }
     .vendor-page-header {
       margin-bottom: 24px;
     }
@@ -101,7 +92,8 @@ interface Franchise {
       justify-content: space-between;
       margin-bottom: 8px;
     }
-    .vendor-page-header h1 {
+    .vendor-page-header h1,
+    .vendor-page-title {
       margin: 0;
       font-size: 1.875rem;
       font-weight: 700;
@@ -206,6 +198,7 @@ interface Franchise {
       color: #64748b;
     }
     .vendor-btn-primary {
+      display: inline-block;
       padding: 8px 16px;
       background: #1976d2;
       color: #fff;
@@ -214,6 +207,7 @@ interface Franchise {
       font-size: 14px;
       font-weight: 500;
       cursor: pointer;
+      text-decoration: none;
     }
     .vendor-btn-primary:hover {
       background: #1565c0;
@@ -235,19 +229,17 @@ interface Franchise {
 export class FranchisesComponent {
   searchQuery = '';
 
-  franchises: Franchise[] = [
-    { id: 1, name: 'Big Frog', v2: false, v3: true, contact: '', email: '' },
-    { id: 2, name: 'Fastsigns', v2: true, v3: true, contact: '', email: '' },
-    { id: 3, name: 'Sign*A*Rama', v2: true, v3: true, contact: '', email: '' },
-    { id: 4, name: 'Signs Express', v2: false, v3: true, contact: '', email: '' },
-    { id: 5, name: 'SignWorld', v2: true, v3: true, contact: '', email: '' },
-    { id: 6, name: 'Speedpro CA', v2: true, v3: true, contact: '', email: '' },
-    { id: 7, name: 'Speedpro US', v2: true, v3: true, contact: '', email: '' },
-  ];
+  franchises: Franchise[] = [];
+  filteredFranchises: Franchise[] = [];
 
-  filteredFranchises: Franchise[] = [...this.franchises].sort((a, b) =>
-    a.name.localeCompare(b.name, undefined, { sensitivity: 'base' })
-  );
+  constructor(private franchiseService: FranchiseService) {}
+
+  ngOnInit() {
+    this.franchises = this.franchiseService.getAll();
+    this.filteredFranchises = [...this.franchises].sort((a, b) =>
+      a.name.localeCompare(b.name, undefined, { sensitivity: 'base' })
+    );
+  }
 
   filterFranchises() {
     const q = this.searchQuery.trim().toLowerCase();

@@ -4,6 +4,26 @@ CoreBridge VIPER - Daily Changes Summary
 This file tracks changes made to the CoreBridge VIPER project organized by date.
 
 -------------------------------------------------------------------------------
+2026-02-21
+-------------------------------------------------------------------------------
+
+Vendor detail page (work done today):
+- Vendor detail component (vendor-detail.component.ts): Full read/edit layout for vendors/new and vendors/:id. Two-column responsive layout: sidebar (sticky on desktop) + main content.
+- Sidebar: Vendor overview card with name (with edit pencil), status badge (Active, Inactive, Declined, On Hold, In Review, New Inquiry), pricing and restrictions badges, NDA/Contract on-file badges, CoreBridge V2/V3 authorization badges. Contacts section: list of contacts (name, email, Primary badge), inline name/email inputs per contact, add/remove contact (+ Add Contact, × remove when more than one).
+- Main: Three detail cards — (1) Pricing Details: Onboarding package, Monthly API, Support Plan (with "charged for Monthly API only" note), Sandbox Environment; (2) Revenue Share Details: conditionally shown amounts (Annually, Quarterly, Monthly, Transactionally) and Renewal Date, or "No revenue share details"; (3) Contract Details: same pattern (Annually/Quarterly/Monthly/Transactionally + Renewal Date) or "No contract details". Each card has edit pencil opening modal. Linked Integrations table: columns Name, Product, Status (from IntegrationService.getByVendor(vendor name)); empty state "No integrations found for this vendor". Open Tasks section (placeholder "No open tasks").
+- Edit Vendor modal (evo Edit Company style): Backdrop + centered modal, header "Edit Vendor" with close. Grid: Details card (Vendor Name required); Authorization & Status card (Status dropdown, CoreBridge pill group V2 only / V3 only / V2 & V3). Full-width Documents & Pricing card: NDA on file (Yes/No pills), Contract on file (Yes/No pills), Pricing dropdown (Rev Share, Monthly API, Contract, Exempt, —), Restrictions (No restrictions, Franchise, Regional), Support Plan (—, Basic, Essentials, Premium, Waived) with hint, Sandbox Environment text input. Conditional sections: Revenue Share Details (when Pricing = Rev Share) — checkboxes + amount inputs for Annually/Quarterly/Monthly/Transactionally, Renewal Date; Monthly API Details (when Pricing = Monthly API) — Onboarding Package (Bronze/Silver/Gold/Waived), Monthly API (Basic/Professional/Enterprise/Waived); Contract Details (when Pricing = Contract) — same structure as Revenue Share (Annually/Quarterly/Monthly/Transactionally + Renewal Date).
+- Component logic: Route param id (or 'new'); VendorService.getById(id); not-found state and "Back to Vendors" link; form model includes contacts array, pricing/contract/revenue-share fields; patchForm from vendor list shape; addContact/removeContact; linkedIntegrations getter; authMode (V2/V3/Both) and setAuth for pills; onSave POC no-op. Breadcrumbs: Vendors → vendor name or "Not found". Extensive component-scoped styles for layout, cards, badges, modal, pills, tables.
+
+Add/Edit pattern for Integrations and Franchises (work done today):
+- IntegrationService: Added getById(id: string); returns null for id 'new', otherwise finds integration by numeric id from in-memory list.
+- FranchiseService: New service (src/app/services/franchise.service.ts) with Franchise interface and in-memory list; getAll() and getById(id) with same pattern (getById('new') returns null). Franchise data moved out of franchises list component into service.
+- Integration detail: New IntegrationDetailComponent; routes integrations/new and integrations/:id both load it. Breadcrumbs: Integrations → "New integration" or integration name (or "Not found"). Form: name, vendor, product, implementation status, implemented by, V2/V3 checkboxes. Back to list and Save (POC no-op), Cancel.
+- Franchise detail: New FranchiseDetailComponent; routes franchises/new and franchises/:id both load it. Breadcrumbs: Franchises → "New franchise" or franchise name (or "Not found"). Form: name, contact, email, V2/V3 checkboxes. Same Back/Save/Cancel behavior.
+- Routes (app.routes.ts): Added integrations/new, integrations/:id → IntegrationDetailComponent; franchises/new, franchises/:id → FranchiseDetailComponent. Franchises list route changed to loadComponent (lazy load) like other list pages.
+- Integrations list: "+ Add Integration" and row "Edit" now navigate via routerLink (to /integrations/new and /integrations/:id).
+- Franchises list: Injects FranchiseService and uses getAll() for list data; "+ Add Franchise" and row "Edit" navigate via routerLink (to /franchises/new and /franchises/:id). Add links styled as primary buttons (display: inline-block, text-decoration: none on .vendor-btn-primary for <a>).
+
+-------------------------------------------------------------------------------
 2026-02-18
 -------------------------------------------------------------------------------
 
@@ -33,12 +53,8 @@ Additional changes (same day):
 - Franchises page: New route /franchises and nav link; page similar to Vendors with table, search, and initial list (Big Frog, Fastsigns, Sign*A*Rama, Signs Express, SignWorld, Speedpro CA, Speedpro US). Home dashboard card added (7 franchises). Route uses direct component import to avoid build resolve issue.
 - Franchises columns: Added CoreBridge (V2/V3 badges), Contact, Email, and Actions (Edit) to match Vendors. Big Frog and Signs Express = V3 only; all others = both V2 and V3. Search by name, contact, or email; alphabetical sort.
 - Home dashboard: Recent Activity moved to a static full-width section below the partnership cards grid so it no longer shifts when adding more partnership options (Vendors, Integrations, Franchises).
-- Integrations page: Added "+ Add Integration" button in header (title row) and Edit action in new Actions column for each row; added corresponding button styles.
+- Integrations page: Added "+ Add Integration" button in header (title row) and Edit action in new Actions column for each row; added corresponding button styles. (Add/Edit were not yet wired to navigation.)
 - .gitignore: Updated POC-Vendor to match POC-Documents (node_modules/, dist/, .angular/, out-tsc/, tmp/, logs, OS files); scope limited to POC-Vendor only.
-
--------------------------------------------------------------------------------
-2024-01-16 (or current date)
--------------------------------------------------------------------------------
 
 Initial Setup:
 - Created Angular 17 project structure with Evo theme styling

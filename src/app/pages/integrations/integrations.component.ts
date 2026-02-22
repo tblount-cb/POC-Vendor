@@ -1,35 +1,31 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-
-interface Integration {
-  id: number;
-  name: string;
-  vendor: string;
-  product: string;
-  v2: boolean;
-  v3: boolean;
-  implementationStatus: 'Live' | 'In progress' | 'Planned' | '—';
-  implementedBy: string;
-}
+import { RouterModule } from '@angular/router';
+import { IntegrationService, Integration } from '../../services/integration.service';
 
 @Component({
   selector: 'vendor-integrations',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterModule],
   template: `
     <div class="vendor-page">
-      <div class="vendor-page-header">
-        <div class="vendor-page-title-row">
-          <h1>Integrations</h1>
-          <button type="button" class="vendor-btn-primary">+ Add Integration</button>
+      <nav class="vendor-breadcrumbs gutter-side" aria-label="Breadcrumb">
+        <a routerLink="/integrations">Integrations</a>
+      </nav>
+      <div class="page-header-container gutter-side">
+        <div class="vendor-page-header">
+          <div class="vendor-page-title-row">
+            <h1 class="vendor-page-title">Integrations</h1>
+            <a routerLink="/integrations/new" class="vendor-btn-primary">+ Add Integration</a>
+          </div>
+          <p class="vendor-page-subtitle">
+            Details about each integration: vendor, product support, and implementation status.
+          </p>
         </div>
-        <p class="vendor-page-subtitle">
-          Details about each integration: vendor, product support, and implementation status.
-        </p>
       </div>
 
-      <div class="vendor-toolbar">
+      <div class="vendor-toolbar gutter-side">
         <div class="vendor-search-wrap">
           <span class="vendor-search-icon">🔍</span>
           <input
@@ -50,7 +46,7 @@ interface Integration {
         </div>
       </div>
 
-      <div class="vendor-table-wrap">
+      <div class="vendor-table-wrap gutter-side">
         <table class="vendor-table">
           <thead>
             <tr>
@@ -90,7 +86,7 @@ interface Integration {
               </td>
               <td>{{ integration.implementedBy || '—' }}</td>
               <td>
-                <button type="button" class="vendor-btn-link">Edit</button>
+                <a [routerLink]="['/integrations', integration.id]" class="vendor-btn-link">Edit</a>
               </td>
             </tr>
             <tr *ngIf="filteredIntegrations.length === 0">
@@ -102,19 +98,12 @@ interface Integration {
         </table>
       </div>
 
-      <div class="vendor-table-footer">
+      <div class="vendor-table-footer gutter-side">
         Showing {{ filteredIntegrations.length }} of {{ integrations.length }} integrations
       </div>
     </div>
   `,
   styles: [`
-    .vendor-page {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 32px 24px;
-      background: #fff;
-      min-height: calc(100vh - 64px);
-    }
     .vendor-page-header {
       margin-bottom: 24px;
     }
@@ -124,7 +113,8 @@ interface Integration {
       justify-content: space-between;
       margin-bottom: 8px;
     }
-    .vendor-page-header h1 {
+    .vendor-page-header h1,
+    .vendor-page-title {
       margin: 0 0 8px 0;
       font-size: 1.875rem;
       font-weight: 700;
@@ -262,6 +252,7 @@ interface Integration {
       color: #64748b;
     }
     .vendor-btn-primary {
+      display: inline-block;
       padding: 8px 16px;
       background: #1976d2;
       color: #fff;
@@ -270,6 +261,7 @@ interface Integration {
       font-size: 14px;
       font-weight: 500;
       cursor: pointer;
+      text-decoration: none;
     }
     .vendor-btn-primary:hover {
       background: #1565c0;
@@ -292,43 +284,17 @@ export class IntegrationsComponent {
   searchQuery = '';
   platformFilter = '';
 
-  integrations: Integration[] = [
-    { id: 1, name: 'QuickBooks Online Summary Sync', vendor: 'QuickBooks', product: 'Accounting Sync', v2: true, v3: true, implementationStatus: '—', implementedBy: '' },
-    { id: 2, name: 'Xero Summary Sync', vendor: 'Xero', product: 'Accounting Sync', v2: true, v3: true, implementationStatus: '—', implementedBy: '' },
-    { id: 3, name: 'Xero Detail Sync', vendor: 'Xero', product: 'Accounting Sync', v2: true, v3: true, implementationStatus: '—', implementedBy: '' },
-    { id: 4, name: 'QuickBooks Online Detail Sync', vendor: 'QuickBooks', product: 'Accounting Sync', v2: true, v3: true, implementationStatus: '—', implementedBy: '' },
-    { id: 5, name: 'Avalara', vendor: 'Avalara', product: 'Tax Lookup', v2: true, v3: true, implementationStatus: '—', implementedBy: '' },
-    { id: 6, name: 'TaxJar', vendor: 'TaxJar', product: 'Tax Lookup', v2: true, v3: true, implementationStatus: '—', implementedBy: '' },
-    { id: 7, name: 'LoyaltyLoop', vendor: 'LoyaltyLoop', product: 'CRM Tool', v2: true, v3: true, implementationStatus: '—', implementedBy: '' },
-    { id: 8, name: 'Zapier', vendor: 'Zapier', product: 'Automation', v2: true, v3: false, implementationStatus: '—', implementedBy: '' },
-    { id: 9, name: 'XPS (Shipping)', vendor: 'XPS', product: 'Shipping', v2: true, v3: false, implementationStatus: '—', implementedBy: '' },
-    { id: 10, name: 'Four51', vendor: 'Four51', product: 'Ecommerce', v2: true, v3: false, implementationStatus: '—', implementedBy: '' },
-    { id: 11, name: 'XMPie', vendor: 'XMPie', product: 'Marketing', v2: true, v3: false, implementationStatus: '—', implementedBy: '' },
-    { id: 12, name: 'Pressero', vendor: 'Pressero', product: 'Ecommerce', v2: true, v3: false, implementationStatus: '—', implementedBy: '' },
-    { id: 13, name: 'Nexio', vendor: 'Nexio', product: 'Integrated Payment', v2: true, v3: true, implementationStatus: '—', implementedBy: '' },
-    { id: 14, name: 'Fiserv AUS', vendor: 'Fiserv AUS', product: 'Integrated Payment', v2: true, v3: true, implementationStatus: '—', implementedBy: '' },
-    { id: 15, name: 'Fiserv US', vendor: 'Fiserv US', product: 'Integrated Payment', v2: true, v3: true, implementationStatus: '—', implementedBy: '' },
-    { id: 16, name: 'Authorized.NET', vendor: 'Authorized.NET', product: 'Integrated Payment', v2: true, v3: true, implementationStatus: '—', implementedBy: '' },
-    { id: 17, name: 'Stripe', vendor: 'Stripe', product: 'Integrated Payment', v2: true, v3: true, implementationStatus: '—', implementedBy: '' },
-    { id: 18, name: 'SignPack', vendor: 'SignPack', product: '', v2: true, v3: false, implementationStatus: '—', implementedBy: '' },
-    { id: 19, name: 'SalesHub', vendor: 'SalesHub', product: '', v2: true, v3: false, implementationStatus: '—', implementedBy: '' },
-    { id: 20, name: 'Gorilla Dash', vendor: 'Gorilla Dash', product: '', v2: true, v3: false, implementationStatus: '—', implementedBy: '' },
-    { id: 21, name: 'Text Control', vendor: 'Text Control', product: 'Reporting', v2: false, v3: true, implementationStatus: '—', implementedBy: '' },
-    { id: 22, name: 'Qrvey', vendor: 'Qrvey', product: 'Reporting', v2: false, v3: true, implementationStatus: '—', implementedBy: '' },
-    { id: 23, name: 'SanMar', vendor: 'SanMar', product: 'Apparel Vendor', v2: false, v3: true, implementationStatus: '—', implementedBy: '' },
-    { id: 24, name: 'S&S Activewear', vendor: 'S&S Activewear', product: 'Apparel Vendor', v2: false, v3: true, implementationStatus: '—', implementedBy: '' },
-    { id: 25, name: 'Google Calendar', vendor: 'Google', product: 'Calendar Sync', v2: false, v3: true, implementationStatus: '—', implementedBy: '' },
-    { id: 26, name: 'Microsoft Calendar', vendor: 'Microsoft', product: 'Calendar Sync', v2: false, v3: true, implementationStatus: '—', implementedBy: '' },
-    { id: 27, name: 'Listen360', vendor: 'Listen360', product: 'CRM Tool', v2: false, v3: true, implementationStatus: '—', implementedBy: '' },
-    { id: 28, name: 'Google Gmail', vendor: 'Google', product: 'Email', v2: false, v3: true, implementationStatus: '—', implementedBy: '' },
-    { id: 29, name: 'Microsoft Outlook', vendor: 'Microsoft', product: 'Email', v2: false, v3: true, implementationStatus: '—', implementedBy: '' },
-    { id: 30, name: 'CoreBridge Shipping (EasyPost)', vendor: 'EasyPost', product: 'Shipping Integration', v2: false, v3: true, implementationStatus: '—', implementedBy: '' },
-    { id: 31, name: 'CoreBridge Tax Lookup (TaxJar)', vendor: 'TaxJar', product: 'Tax Lookup', v2: false, v3: true, implementationStatus: '—', implementedBy: '' },
-  ];
+  integrations: Integration[] = [];
+  filteredIntegrations: Integration[] = [];
 
-  filteredIntegrations: Integration[] = [...this.integrations].sort((a, b) =>
-    a.name.localeCompare(b.name, undefined, { sensitivity: 'base' })
-  );
+  constructor(private integrationService: IntegrationService) {}
+
+  ngOnInit() {
+    this.integrations = this.integrationService.getAll();
+    this.filteredIntegrations = [...this.integrations].sort((a, b) =>
+      a.name.localeCompare(b.name, undefined, { sensitivity: 'base' })
+    );
+  }
 
   filterIntegrations() {
     const q = this.searchQuery.trim().toLowerCase();

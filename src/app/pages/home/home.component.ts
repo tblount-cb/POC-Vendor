@@ -8,14 +8,16 @@ import { RouterModule } from '@angular/router';
   imports: [CommonModule, RouterModule],
   template: `
     <div class="vendor-page">
-      <div class="vendor-page-header">
-        <h1>Welcome to CoreBridge VIPER</h1>
-        <p class="vendor-page-subtitle">
-          Vendor Integration, Partnerships & Enterprise Relationships – Manage your vendors, integrations, and business relationships in one place.
-        </p>
+      <div class="page-header-container gutter-side">
+        <div class="vendor-page-header">
+          <h1>Welcome to CoreBridge VIPER</h1>
+          <p class="vendor-page-subtitle">
+            Vendor Integration, Partnerships & Enterprise Relationships – Manage your vendors, integrations, and business relationships in one place.
+          </p>
+        </div>
       </div>
 
-      <div class="vendor-dashboard-grid">
+      <div class="vendor-dashboard-grid gutter-side">
         <div class="vendor-card">
           <div class="vendor-card-header">
             <h2>Vendors</h2>
@@ -50,7 +52,7 @@ import { RouterModule } from '@angular/router';
         </div>
       </div>
 
-      <section class="vendor-activity-section" aria-label="Recent activity">
+      <section class="vendor-activity-section gutter-side" aria-label="Recent activity">
         <div class="vendor-activity-card">
           <div class="vendor-card-header">
             <h2>Recent Activity</h2>
@@ -67,11 +69,6 @@ import { RouterModule } from '@angular/router';
     </div>
   `,
   styles: [`
-    .vendor-page {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 32px 24px;
-    }
     .vendor-page-header {
       margin-bottom: 32px;
     }

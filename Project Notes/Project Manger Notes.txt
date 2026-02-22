@@ -1,5 +1,13 @@
+Headers: Use title case. Capitalize every word except minor words (e.g. on, a, the, in, for, and, or, but).
+
 Styling reference (team): end-web repo, evo-platform branch — use src/Evo for UI to match. end-web uses inline Tailwind + tailwind.scss and the Evo theme. (Cursor rule: .cursor/rules/end-web-evo-styling.mdc)
 
+
+
+
+
+
+++++
 What do we need? 
 	• We need an request for meeting form on CoreBridge website
 	• We need an place for request form and direct emails to get entered into a queue

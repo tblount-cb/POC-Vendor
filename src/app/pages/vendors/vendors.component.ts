@@ -1,38 +1,31 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-
-/** V2/V3 indicate platform version support (Yes / No / Pending). */
-interface Vendor {
-  id: number;
-  name: string;
-  v2: 'Yes' | 'No' | 'Pending';
-  v3: 'Yes' | 'No' | 'Pending';
-  contact: string;
-  email: string;
-  ndaOnFile: 'Yes' | 'No';
-  contractOnFile: 'Yes' | 'No';
-  pricing: 'Rev Share' | 'Monthly API' | 'Exempt' | 'Exempt or N/A' | 'Contract' | 'N/A' | 'Unknown';
-  restrictions: 'Franchise' | 'Regional' | 'No Restrictions';
-}
+import { RouterModule } from '@angular/router';
+import { VendorService, Vendor } from '../../services/vendor.service';
 
 @Component({
   selector: 'vendor-vendors',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterModule],
   template: `
     <div class="vendor-page">
-      <div class="vendor-page-header">
-        <div class="vendor-page-title-row">
-          <h1>Vendors</h1>
-          <button class="vendor-btn-primary">+ Add Vendor</button>
+      <nav class="vendor-breadcrumbs gutter-side" aria-label="Breadcrumb">
+        <a routerLink="/vendors">Vendors</a>
+      </nav>
+      <div class="page-header-container gutter-side">
+        <div class="vendor-page-header">
+          <div class="vendor-page-title-row">
+            <h1 class="vendor-page-title">Vendors</h1>
+            <a routerLink="/vendors/new" class="vendor-btn-primary">+ Add Vendor</a>
+          </div>
+          <p class="vendor-page-subtitle">
+            Manage your vendor relationships and contact information.
+          </p>
         </div>
-        <p class="vendor-page-subtitle">
-          Manage your vendor relationships and contact information.
-        </p>
       </div>
 
-      <div class="vendor-toolbar">
+      <div class="vendor-toolbar gutter-side">
         <div class="vendor-search-wrap">
           <span class="vendor-search-icon">🔍</span>
           <input
@@ -44,6 +37,15 @@ interface Vendor {
           />
         </div>
         <div class="vendor-toolbar-actions">
+          <select class="vendor-select" [(ngModel)]="statusFilter" (change)="filterVendors()">
+            <option value="">All statuses</option>
+            <option value="New Inquiry">New Inquiry</option>
+            <option value="In Review">In Review</option>
+            <option value="Active Vendor">Active Vendor</option>
+            <option value="On Hold">On Hold</option>
+            <option value="Declined">Declined</option>
+            <option value="Inactive (Former Vendor)">Inactive (Former Vendor)</option>
+          </select>
           <select class="vendor-select" [(ngModel)]="platformFilter" (change)="filterVendors()">
             <option value="">All CoreBridge</option>
             <option value="V2">V2 authorized</option>
@@ -52,11 +54,12 @@ interface Vendor {
         </div>
       </div>
 
-      <div class="vendor-table-wrap">
+      <div class="vendor-table-wrap gutter-side">
         <table class="vendor-table">
           <thead>
             <tr>
               <th>Name</th>
+              <th>Status</th>
               <th>CoreBridge</th>
               <th>Contact</th>
               <th>Email</th>
@@ -72,6 +75,16 @@ interface Vendor {
                 <div class="vendor-name-cell">
                   <strong>{{ vendor.name }}</strong>
                 </div>
+              </td>
+              <td>
+                <span class="vendor-status-badge" [class.vendor-status-active]="vendor.status === 'Active Vendor'"
+                  [class.vendor-status-inactive]="vendor.status === 'Inactive (Former Vendor)'"
+                  [class.vendor-status-declined]="vendor.status === 'Declined'"
+                  [class.vendor-status-hold]="vendor.status === 'On Hold'"
+                  [class.vendor-status-review]="vendor.status === 'In Review'"
+                  [class.vendor-status-inquiry]="vendor.status === 'New Inquiry'">
+                  {{ vendor.status }}
+                </span>
               </td>
               <td>
                 <div class="vendor-platform-badges">
@@ -106,11 +119,11 @@ interface Vendor {
                 </span>
               </td>
               <td>
-                <button class="vendor-btn-link">Edit</button>
+                <a [routerLink]="['/vendors', vendor.id]" class="vendor-btn-link">Edit</a>
               </td>
             </tr>
             <tr *ngIf="filteredVendors.length === 0">
-              <td colspan="8" class="vendor-table-empty">
+              <td colspan="9" class="vendor-table-empty">
                 No vendors found
               </td>
             </tr>
@@ -118,19 +131,12 @@ interface Vendor {
         </table>
       </div>
 
-      <div class="vendor-table-footer">
+      <div class="vendor-table-footer gutter-side">
         Showing {{ filteredVendors.length }} of {{ vendors.length }} vendors
       </div>
     </div>
   `,
   styles: [`
-    .vendor-page {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 32px 24px;
-      background: #fff;
-      min-height: calc(100vh - 64px);
-    }
     .vendor-page-header {
       margin-bottom: 24px;
     }
@@ -140,7 +146,8 @@ interface Vendor {
       justify-content: space-between;
       margin-bottom: 8px;
     }
-    .vendor-page-header h1 {
+    .vendor-page-header h1,
+    .vendor-page-title {
       margin: 0;
       font-size: 1.875rem;
       font-weight: 700;
@@ -300,6 +307,38 @@ interface Vendor {
       background: #e0e7ff;
       color: #3730a3;
     }
+    .vendor-status-badge {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+    .vendor-status-active {
+      background: #dcfce7;
+      color: #166534;
+    }
+    .vendor-status-inactive {
+      background: #f1f5f9;
+      color: #64748b;
+    }
+    .vendor-status-declined {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+    .vendor-status-hold {
+      background: #fef3c7;
+      color: #92400e;
+    }
+    .vendor-status-review {
+      background: #dbeafe;
+      color: #1e40af;
+    }
+    .vendor-status-inquiry {
+      background: #e0e7ff;
+      color: #3730a3;
+    }
     .vendor-table-empty {
       text-align: center;
       color: #64748b;
@@ -323,6 +362,10 @@ interface Vendor {
     .vendor-btn-primary:hover {
       background: #1565c0;
     }
+    a.vendor-btn-primary {
+      display: inline-block;
+      text-decoration: none;
+    }
     .vendor-btn-link {
       padding: 4px 8px;
       background: none;
@@ -339,40 +382,19 @@ interface Vendor {
 })
 export class VendorsComponent {
   searchQuery = '';
+  statusFilter = '';
   platformFilter = '';
+  vendors: Vendor[] = [];
+  filteredVendors: Vendor[] = [];
 
-  vendors: Vendor[] = [
-    { id: 1, name: 'QuickBooks', v2: 'Yes', v3: 'Yes', contact: 'N/A', email: '', ndaOnFile: 'No', contractOnFile: 'No', pricing: 'Exempt', restrictions: 'No Restrictions' },
-    { id: 2, name: 'Xero', v2: 'Yes', v3: 'Yes', contact: 'N/A', email: '', ndaOnFile: 'No', contractOnFile: 'No', pricing: 'Exempt', restrictions: 'No Restrictions' },
-    { id: 3, name: 'SanMar', v2: 'No', v3: 'Yes', contact: '', email: '', ndaOnFile: 'No', contractOnFile: 'No', pricing: 'Exempt', restrictions: 'No Restrictions' },
-    { id: 4, name: 'S&S Activewear', v2: 'No', v3: 'Yes', contact: '', email: '', ndaOnFile: 'No', contractOnFile: 'No', pricing: 'Exempt', restrictions: 'No Restrictions' },
-    { id: 5, name: 'Google', v2: 'No', v3: 'Yes', contact: 'N/A', email: '', ndaOnFile: 'No', contractOnFile: 'No', pricing: 'Exempt', restrictions: 'No Restrictions' },
-    { id: 6, name: 'Microsoft', v2: 'No', v3: 'Yes', contact: 'N/A', email: '', ndaOnFile: 'No', contractOnFile: 'No', pricing: 'Exempt', restrictions: 'No Restrictions' },
-    { id: 7, name: 'Listen360', v2: 'No', v3: 'Yes', contact: '', email: '', ndaOnFile: 'No', contractOnFile: 'No', pricing: 'N/A', restrictions: 'Franchise' },
-    { id: 8, name: 'LoyaltyLoop', v2: 'Yes', v3: 'Yes', contact: 'John DiPippo', email: 'jdipippo@loyaltyloop.com', ndaOnFile: 'No', contractOnFile: 'No', pricing: 'Rev Share', restrictions: 'No Restrictions' },
-    { id: 9, name: 'Nexio', v2: 'Yes', v3: 'Yes', contact: 'Jenn Aaron', email: 'jaaron@nex.io', ndaOnFile: 'No', contractOnFile: 'No', pricing: 'Rev Share', restrictions: 'No Restrictions' },
-    { id: 10, name: 'Fiserv AUS', v2: 'Yes', v3: 'Yes', contact: 'Jade Nancarrow', email: 'jade.nancarrow@fiserv.com', ndaOnFile: 'No', contractOnFile: 'No', pricing: 'Rev Share', restrictions: 'Regional' },
-    { id: 11, name: 'Fiserv US', v2: 'Yes', v3: 'Yes', contact: 'Tana Greenfield', email: 'tana.greenfield@fiserv.com', ndaOnFile: 'No', contractOnFile: 'No', pricing: 'Rev Share', restrictions: 'Regional' },
-    { id: 12, name: 'Stripe', v2: 'Yes', v3: 'Yes', contact: '', email: '', ndaOnFile: 'No', contractOnFile: 'No', pricing: 'Rev Share', restrictions: 'Regional' },
-    { id: 13, name: 'Authorized.NET', v2: 'Yes', v3: 'Yes', contact: '', email: '', ndaOnFile: 'No', contractOnFile: 'No', pricing: 'Rev Share', restrictions: 'Franchise' },
-    { id: 14, name: 'EasyPost', v2: 'No', v3: 'Yes', contact: 'Brian Hill', email: 'bhill@easypost.com', ndaOnFile: 'No', contractOnFile: 'No', pricing: 'Contract', restrictions: 'No Restrictions' },
-    { id: 15, name: 'TaxJar', v2: 'Yes', v3: 'Yes', contact: '', email: '', ndaOnFile: 'No', contractOnFile: 'No', pricing: 'N/A', restrictions: 'No Restrictions' },
-    { id: 16, name: 'Avalara', v2: 'Yes', v3: 'Yes', contact: 'Adhya Sethuraman', email: 'adhya.sethuraman@avalara.com', ndaOnFile: 'No', contractOnFile: 'No', pricing: 'Rev Share', restrictions: 'No Restrictions' },
-    { id: 17, name: 'Zapier', v2: 'Yes', v3: 'No', contact: '', email: '', ndaOnFile: 'No', contractOnFile: 'No', pricing: 'N/A', restrictions: 'No Restrictions' },
-    { id: 18, name: 'XPS', v2: 'Yes', v3: 'No', contact: '', email: '', ndaOnFile: 'No', contractOnFile: 'No', pricing: 'N/A', restrictions: 'No Restrictions' },
-    { id: 19, name: 'Four51', v2: 'Yes', v3: 'No', contact: '', email: '', ndaOnFile: 'No', contractOnFile: 'No', pricing: 'N/A', restrictions: 'No Restrictions' },
-    { id: 20, name: 'XMPie', v2: 'Yes', v3: 'No', contact: '', email: '', ndaOnFile: 'No', contractOnFile: 'No', pricing: 'N/A', restrictions: 'No Restrictions' },
-    { id: 21, name: 'Pressero', v2: 'Yes', v3: 'No', contact: 'George Mixco', email: 'george.mixco@aleyant.com', ndaOnFile: 'No', contractOnFile: 'No', pricing: 'N/A', restrictions: 'No Restrictions' },
-    { id: 22, name: 'SignPack', v2: 'Yes', v3: 'Pending', contact: '', email: '', ndaOnFile: 'No', contractOnFile: 'No', pricing: 'N/A', restrictions: 'No Restrictions' },
-    { id: 23, name: 'SalesHub', v2: 'Yes', v3: 'Pending', contact: '', email: '', ndaOnFile: 'No', contractOnFile: 'No', pricing: 'N/A', restrictions: 'No Restrictions' },
-    { id: 24, name: 'Gorilla Dash', v2: 'Yes', v3: 'Pending', contact: 'Anthony Gherghetta', email: 'anthony@gorilladash.com', ndaOnFile: 'No', contractOnFile: 'No', pricing: 'Rev Share', restrictions: 'Franchise' },
-    { id: 25, name: 'Text Control', v2: 'No', v3: 'Yes', contact: '', email: '', ndaOnFile: 'No', contractOnFile: 'No', pricing: 'Contract', restrictions: 'No Restrictions' },
-    { id: 26, name: 'Qrvey', v2: 'No', v3: 'Yes', contact: 'Natan Cohen', email: 'natan@qrvey.com', ndaOnFile: 'No', contractOnFile: 'No', pricing: 'Contract', restrictions: 'No Restrictions' },
-  ];
+  constructor(private vendorService: VendorService) {}
 
-  filteredVendors: Vendor[] = [...this.vendors].sort((a, b) =>
-    a.name.localeCompare(b.name, undefined, { sensitivity: 'base' })
-  );
+  ngOnInit() {
+    this.vendors = this.vendorService.getAll();
+    this.filteredVendors = [...this.vendors].sort((a, b) =>
+      a.name.localeCompare(b.name, undefined, { sensitivity: 'base' })
+    );
+  }
 
   filterVendors() {
     const q = this.searchQuery.trim().toLowerCase();
@@ -382,11 +404,12 @@ export class VendorsComponent {
           vendor.name.toLowerCase().includes(q) ||
           (vendor.contact && vendor.contact.toLowerCase().includes(q)) ||
           (vendor.email && vendor.email.toLowerCase().includes(q));
+        const matchesStatus = !this.statusFilter || vendor.status === this.statusFilter;
         const matchesPlatform =
           !this.platformFilter ||
           (this.platformFilter === 'V2' && vendor.v2 === 'Yes') ||
           (this.platformFilter === 'V3' && vendor.v3 === 'Yes');
-        return matchesSearch && matchesPlatform;
+        return matchesSearch && matchesStatus && matchesPlatform;
       })
       .sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: 'base' }));
   }

@@ -1,5 +1,4 @@
 import { Routes } from '@angular/router';
-import { FranchisesComponent } from './pages/franchises/franchises.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -14,13 +13,44 @@ export const routes: Routes = [
       import('./pages/vendors/vendors.component').then((m) => m.VendorsComponent),
   },
   {
+    path: 'vendors/new',
+    loadComponent: () =>
+      import('./pages/vendors/vendor-detail.component').then((m) => m.VendorDetailComponent),
+  },
+  {
+    path: 'vendors/:id',
+    loadComponent: () =>
+      import('./pages/vendors/vendor-detail.component').then((m) => m.VendorDetailComponent),
+  },
+  {
     path: 'integrations',
     loadComponent: () =>
       import('./pages/integrations/integrations.component').then((m) => m.IntegrationsComponent),
   },
   {
+    path: 'integrations/new',
+    loadComponent: () =>
+      import('./pages/integrations/integration-detail.component').then((m) => m.IntegrationDetailComponent),
+  },
+  {
+    path: 'integrations/:id',
+    loadComponent: () =>
+      import('./pages/integrations/integration-detail.component').then((m) => m.IntegrationDetailComponent),
+  },
+  {
     path: 'franchises',
-    component: FranchisesComponent,
+    loadComponent: () =>
+      import('./pages/franchises/franchises.component').then((m) => m.FranchisesComponent),
+  },
+  {
+    path: 'franchises/new',
+    loadComponent: () =>
+      import('./pages/franchises/franchise-detail.component').then((m) => m.FranchiseDetailComponent),
+  },
+  {
+    path: 'franchises/:id',
+    loadComponent: () =>
+      import('./pages/franchises/franchise-detail.component').then((m) => m.FranchiseDetailComponent),
   },
   { path: '**', redirectTo: 'home' },
 ];
