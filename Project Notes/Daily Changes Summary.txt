@@ -4,6 +4,35 @@ CoreBridge VIPER - Daily Changes Summary
 This file tracks changes made to the CoreBridge VIPER project organized by date.
 
 -------------------------------------------------------------------------------
+2026-02-25
+-------------------------------------------------------------------------------
+
+Preferred Partner:
+- Added preferredPartner to Vendor interface and seed data (QuickBooks, LoyaltyLoop, Microsoft, Fiserv AUS/US, Avalara, EasyPost as preferred; others explicit false or unset).
+- Vendors list (/vendors): New "Preferred Partner" column after CoreBridge; shows "Preferred Partner" badge (amber) or "—". Badge styling consistent with other badges.
+- Vendor detail: Preferred Partner badge in overview; Edit modal has "Preferred Partner" checkbox under Authorization & Status. onSave persists preferredPartner via VendorService.update().
+
+Vendor and Authorization badge updates (from Project Notes):
+- Vendor Badge Updates: Applied NDA, Contract, and Preferred Partner for all vendors per Vendor Badge Updates.md (e.g. EasyPost/Avalara/Gorilla Dash/Qrvey NDA+Contract; SignPack/Text Control Contract; preferred partner set per list).
+- Authorization Badge Updates: Applied V2/V3 per Authorization Badge Updates.md (e.g. Authorize.Net V3→No, Google/Microsoft V2→Yes, Gorilla Dash/SignPack V3→Yes, SalesHub V3→No, Stripe V2→No).
+
+Branding, website, and links:
+- Renamed Authorized.NET → Authorize.Net (official branding). Updated integration service vendor name to match.
+- Vendor model: Added optional website and links (VendorLink: label + url). Seed data: added website URLs for all vendors from Vendor Badge Updates.txt references.
+- Vendor detail: New "Links" section under Contacts — displays Website (if set) and additional links (label + URL as links). "Edit links" opens Edit Vendor modal.
+- Edit Vendor modal: Details card has "Website" URL input; new full-width "Links" card for additional links (label + URL rows, add/remove). Only links with URL saved. onSave persists website and links.
+
+Vendor names and websites (from Vendor Badge Updates.txt):
+- Fiserv AUS → Fiserv (Australia), Fiserv US → Fiserv (US); SignPack → The Sign Pack. Integration service vendor names updated for linked integrations.
+- Websites set/updated from doc reference URLs: e.g. Google→about.google, LoyaltyLoop→loyaltyloop.com, Pressero→aleyant.com/pressero/, The Sign Pack→thesignpack.com, XPS→xpsship.com, Four51, XMPie, Fiserv Australia (en-au), etc. SalesHub left without website (no URL in doc).
+
+Search placeholder:
+- Vendors, Integrations, and Franchises list pages: search input placeholder changed to "Search" (was "Search by name, contact, or email..." or "Search by name, vendor, or product...").
+
+Git:
+- All changes committed: "Vendor updates: preferred partner badge, branding, website/links, search placeholder" (8 files including new Project Notes).
+
+-------------------------------------------------------------------------------
 2026-02-21
 -------------------------------------------------------------------------------
 
