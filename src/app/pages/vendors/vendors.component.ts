@@ -31,7 +31,7 @@ import { VendorService, Vendor } from '../../services/vendor.service';
           <input
             type="text"
             class="vendor-search-input"
-            placeholder="Search by name, contact, or email..."
+            placeholder="Search"
             [(ngModel)]="searchQuery"
             (input)="filterVendors()"
           />
@@ -61,6 +61,7 @@ import { VendorService, Vendor } from '../../services/vendor.service';
               <th>Name</th>
               <th>Status</th>
               <th>CoreBridge</th>
+              <th>Preferred Partner</th>
               <th>Contact</th>
               <th>Email</th>
               <th>On file</th>
@@ -91,6 +92,10 @@ import { VendorService, Vendor } from '../../services/vendor.service';
                   <span class="vendor-platform-badge" [class.vendor-badge-yes]="vendor.v2 === 'Yes'" [class.vendor-badge-no]="vendor.v2 === 'No'" [class.vendor-badge-pending]="vendor.v2 === 'Pending'" title="V2: {{ vendor.v2 }}">V2</span>
                   <span class="vendor-platform-badge" [class.vendor-badge-yes]="vendor.v3 === 'Yes'" [class.vendor-badge-no]="vendor.v3 === 'No'" [class.vendor-badge-pending]="vendor.v3 === 'Pending'" title="V3: {{ vendor.v3 }}">V3</span>
                 </div>
+              </td>
+              <td>
+                <span class="vendor-badge-preferred" *ngIf="vendor.preferredPartner" title="Preferred partner">Preferred Partner</span>
+                <span *ngIf="!vendor.preferredPartner" class="vendor-table-muted">—</span>
               </td>
               <td>{{ vendor.contact || '—' }}</td>
               <td>{{ vendor.email || '—' }}</td>
@@ -123,7 +128,7 @@ import { VendorService, Vendor } from '../../services/vendor.service';
               </td>
             </tr>
             <tr *ngIf="filteredVendors.length === 0">
-              <td colspan="9" class="vendor-table-empty">
+              <td colspan="10" class="vendor-table-empty">
                 No vendors found
               </td>
             </tr>
@@ -232,6 +237,19 @@ import { VendorService, Vendor } from '../../services/vendor.service';
     }
     .vendor-name-cell {
       font-weight: 500;
+    }
+    .vendor-table-muted {
+      color: #94a3b8;
+    }
+    .vendor-badge-preferred {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      background: #fef3c7;
+      color: #92400e;
     }
     .vendor-platform-badges {
       display: flex;

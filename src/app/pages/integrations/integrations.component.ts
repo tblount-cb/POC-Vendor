@@ -31,7 +31,7 @@ import { IntegrationService, Integration } from '../../services/integration.serv
           <input
             type="text"
             class="vendor-search-input"
-            placeholder="Search by name, vendor, or product..."
+            placeholder="Search"
             [(ngModel)]="searchQuery"
             (input)="filterIntegrations()"
           />

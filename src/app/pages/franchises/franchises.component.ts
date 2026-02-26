@@ -31,7 +31,7 @@ import { FranchiseService, Franchise } from '../../services/franchise.service';
           <input
             type="text"
             class="vendor-search-input"
-            placeholder="Search by name, contact, or email..."
+            placeholder="Search"
             [(ngModel)]="searchQuery"
             (input)="filterFranchises()"
           />

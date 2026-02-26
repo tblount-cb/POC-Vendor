@@ -1,0 +1,54 @@
+| Vendor name (correct branding)                    | Website                       | NDA | Contract | Preferred Partner |
+| ------------------------------------------------- | ------------------------------| --: | -------: | ----------------: |
+| **Authorize.Net** (not “Authorized.NET”)          | ([Authorize.net][1])          |  No |       No |                No |
+| **Avalara**                                       | ([Avalara][2])                |  No |      Yes |               Yes |
+| **EasyPost**                                      | ([easypost.com][3])           | Yes |      Yes |               Yes |
+| **Fiserv (US)**                                   | ([Fiserv][4])                 |  No |       No |               Yes |
+| **Fiserv (Australia)**                            | ([Fiserv][5])                 |  No |       No |               Yes |
+| **Four51**                                        | ([Four51][6])                 |  No |       No |                No |
+| **Google**                                        | ([Google][7])                 |  No |       No |                No |
+| **Gorilla Dash**                                  | ([Gorilla Dash][8])           | Yes |      Yes |                No |
+| **Listen360**                                     | ([Listen360][9])              |  No |       No |                No |
+| **LoyaltyLoop**                                   | ([LoyaltyLoop][10])           |  No |       No |               Yes |
+| **Microsoft**                                     | ([Microsoft][11])             |  No |       No |               Yes |
+| **Nexio**                                         | ([Nexio][12])                 |  No |       No |                No |
+| **Pressero**                                      | ([Pressero][13])              |  No |       No |                No |
+| **Qrvey**                                         | ([About Google][7])           | Yes |      Yes |                No |
+| **QuickBooks**                                    | ([QuickBooks][14])            |  No |       No |               Yes |
+| **S&S Activewear** (not “S & S Activewear”)       | ([S&S Activewear][15])        |  No |       No |                No |
+| **SalesHub** *(see note)*                         | ([SalesHub][16])              |  No |       No |                No |
+| **SanMar**                                        | ([SanMar][17])                |  No |       No |                No |
+| **The Sign Pack** (not “SignPack”)                | ([Signage Design Team][18])   |  No |      Yes |                No |
+| **Stripe**                                        | ([Stripe][19])                |  No |       No |                No |
+| **TaxJar**                                        | ([taxjar.com][20])            |  No |       No |                No |
+| **Text Control** *(TX Text Control product line)* | ([textcontrol.com][21])       |  No |      Yes |                No |
+| **Xero**                                          | ([Xero][22])                  |  No |       No |                No |
+| **XMPie**                                         | ([XMPie][23])                 |  No |       No |                No |
+| **XPS** *(ambiguous; see note)*                   | ([XPS Shipping][24])          |  No |       No |                No |
+| **Zapier**                                        | ([Zapier][25])                |  No |       No |                No |
+
+[1]: https://www.authorize.net/?utm_source=chatgpt.com "Authorize.net - Credit card payment processor, online payment systems ..."
+[2]: https://www.avalara.com/us/en/index.html?utm_source=chatgpt.com "Tax Compliance Software - Avalara | Avalara"
+[3]: https://www.easypost.com/?utm_source=chatgpt.com "The Simple Shipping API - EasyPost"
+[4]: https://www.fiserv.com/?utm_source=chatgpt.com "Financial Services Technology, Mobile Banking, Payments | Fiserv"
+[5]: https://www.fiserv.com/en-au.html?utm_source=chatgpt.com "Australia and New Zealand - Fiserv"
+[6]: https://www.four51.com/UI/Logon.aspx?utm_source=chatgpt.com "Sitecore Commerce Server"
+[7]: https://about.google/?utm_source=chatgpt.com "About Google: Our products, technology and company information"
+[8]: https://gorilladash.com/?utm_source=chatgpt.com "Gorilla Dash | Powerful Franchise Software"
+[9]: https://www.listen360.com/?utm_source=chatgpt.com "Customer Experience Software - Listen360"
+[10]: https://loyaltyloop.com/?utm_source=chatgpt.com "Customer Feedback Software | LoyaltyLoop"
+[11]: https://www.microsoft.com/en-us?utm_source=chatgpt.com "Microsoft – AI, Cloud, Productivity, Computing, Gaming & Apps"
+[12]: https://nex.io/?utm_source=chatgpt.com "Nexio | Vanquishing Payment Complexity for Merchants & SaaS"
+[13]: https://www.aleyant.com/pressero/?utm_source=chatgpt.com "Pressero - Instant Web-to-Print Storefronts - Aleyant"
+[14]: https://quickbooks.intuit.com/?utm_source=chatgpt.com "QuickBooks®: Official Site | Smart Tools. Better Business."
+[15]: https://www.ssactivewear.com/?utm_source=chatgpt.com "Wholesale Clothing at Case & Piece Pricing | S&S Activewear"
+[16]: "SalesHub, LLC - Salesforce Consultants & IT Solutions"
+[17]: https://www.sanmar.com/?utm_source=chatgpt.com "Wholesale Apparel, Bags and Caps | SanMar"
+[18]: https://www.thesignpack.com/?utm_source=chatgpt.com "Extended Signage Design Team for Sign Companies | Scalable & Fast ..."
+[19]: https://stripe.com/?utm_source=chatgpt.com "Stripe | Financial Infrastructure to Grow Your Revenue"
+[20]: https://www.taxjar.com/?utm_source=chatgpt.com "TaxJar: Sales Tax Compliance for Modern Commerce"
+[21]: https://www.textcontrol.com/?utm_source=chatgpt.com "Text Control: Digital Document Processing Components for Web, Mobile ..."
+[22]: https://www.xero.com/?utm_source=chatgpt.com "Accounting Software for Small Businesses | Xero"
+[23]: https://www.xmpie.com/?utm_source=chatgpt.com "Multichannel and VDP Marketing Software | XMPie"
+[24]: https://xpsship.com/
+[25]: https://zapier.com/?utm_source=chatgpt.com "Zapier: Automate AI Workflows, Agents, and Apps"

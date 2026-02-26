@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { VendorService, Vendor } from '../../services/vendor.service';
+import { VendorService, Vendor, VendorLink } from '../../services/vendor.service';
 import { IntegrationService, Integration } from '../../services/integration.service';
 
 type V2V3 = 'Yes' | 'No' | 'Pending';
@@ -42,6 +42,7 @@ type VendorStatus = Vendor['status'];
                   <button type="button" class="vendor-name-edit-btn" aria-label="Edit vendor" (click)="showEditModal = true">✎</button>
                 </div>
                 <div class="vendor-platform-badges vendor-overview-badges">
+                  <span class="vendor-badge-preferred" *ngIf="form.preferredPartner" title="Preferred partner">Preferred Partner</span>
                   <span class="vendor-status-badge" [class.vendor-status-active]="form.status === 'Active Vendor'" [class.vendor-status-inactive]="form.status === 'Inactive (Former Vendor)'" [class.vendor-status-declined]="form.status === 'Declined'" [class.vendor-status-hold]="form.status === 'On Hold'" [class.vendor-status-review]="form.status === 'In Review'" [class.vendor-status-inquiry]="form.status === 'New Inquiry'" role="status" aria-label="Vendor status">{{ form.status === 'Inactive (Former Vendor)' ? 'Inactive' : form.status }}</span>
                   <span class="vendor-pricing-badge" [class.vendor-pricing-revshare]="form.pricing === 'Rev Share'" [class.vendor-pricing-monthly]="form.pricing === 'Monthly API'" [class.vendor-pricing-exempt]="form.pricing === 'Exempt'" [class.vendor-pricing-contract]="form.pricing === 'Contract'" [class.vendor-pricing-unknown]="!form.pricing">{{ form.pricing || '—' }}</span>
                   <span class="vendor-restrictions-badge" [class.vendor-restrictions-franchise]="form.restrictions === 'Franchise'" [class.vendor-restrictions-regional]="form.restrictions === 'Regional'" *ngIf="form.restrictions !== 'No Restrictions'">{{ form.restrictions }}</span>
@@ -78,6 +79,23 @@ type VendorStatus = Vendor['status'];
                 </div>
               </div>
               <button type="button" class="vendor-btn-add-contact" (click)="addContact()">+ Add Contact</button>
+            </section>
+
+            <!-- Links -->
+            <section class="vendor-detail-section">
+              <h3 class="vendor-detail-section-heading">Links</h3>
+              <div class="vendor-links-list">
+                <div class="vendor-link-row" *ngIf="form.website">
+                  <span class="vendor-link-label">Website</span>
+                  <a [href]="form.website" target="_blank" rel="noopener noreferrer" class="vendor-link-url">{{ form.website }}</a>
+                </div>
+                <div class="vendor-link-row" *ngFor="let link of (form.links || [])">
+                  <span class="vendor-link-label">{{ link.label || 'Link' }}</span>
+                  <a [href]="link.url" target="_blank" rel="noopener noreferrer" class="vendor-link-url">{{ link.url }}</a>
+                </div>
+                <p class="vendor-card-empty" *ngIf="!form.website && (!form.links || form.links.length === 0)">No links added</p>
+              </div>
+              <button type="button" class="vendor-btn-add-contact" (click)="showEditModal = true">Edit links</button>
             </section>
           </div>
         </aside>
@@ -194,6 +212,10 @@ type VendorStatus = Vendor['status'];
                   <label class="vendor-modal-label">Vendor Name <span class="vendor-required">*</span></label>
                   <input type="text" class="vendor-modal-input" [(ngModel)]="form.name" name="modalName" placeholder="Vendor name" />
                 </div>
+                <div class="vendor-modal-field">
+                  <label class="vendor-modal-label">Website</label>
+                  <input type="url" class="vendor-modal-input" [(ngModel)]="form.website" name="modalWebsite" placeholder="https://..." />
+                </div>
               </div>
               <div class="vendor-modal-card">
                 <h3 class="vendor-modal-card-heading">Authorization &amp; Status</h3>
@@ -216,7 +238,22 @@ type VendorStatus = Vendor['status'];
                     <button type="button" class="vendor-pill" [class.vendor-pill-active]="authMode === 'Both'" (click)="setAuth('Both')">V2 &amp; V3</button>
                   </div>
                 </div>
+                <div class="vendor-modal-field vendor-checkbox-field">
+                  <label class="vendor-modal-label"><input type="checkbox" [(ngModel)]="form.preferredPartner" name="preferredPartner" /> Preferred Partner</label>
+                </div>
               </div>
+            </div>
+            <div class="vendor-modal-card vendor-modal-card-full">
+              <h3 class="vendor-modal-card-heading">Links</h3>
+              <p class="vendor-modal-hint" style="margin-bottom: 12px;">Add development portals, API docs, sandbox URLs, etc.</p>
+              <div class="vendor-links-edit-list">
+                <div class="vendor-link-edit-row" *ngFor="let link of (form.links || []); let i = index">
+                  <input type="text" class="vendor-modal-input vendor-link-edit-label" [(ngModel)]="link.label" [name]="'linkLabel' + i" placeholder="Label (e.g. API Docs)" />
+                  <input type="url" class="vendor-modal-input vendor-link-edit-url" [(ngModel)]="link.url" [name]="'linkUrl' + i" placeholder="https://..." />
+                  <button type="button" class="vendor-contact-remove" aria-label="Remove link" (click)="removeLink(i)">×</button>
+                </div>
+              </div>
+              <button type="button" class="vendor-btn-add-contact" (click)="addLink()">+ Add link</button>
             </div>
             <div class="vendor-modal-card vendor-modal-card-full">
               <h3 class="vendor-modal-card-heading">Documents &amp; Pricing</h3>
@@ -400,6 +437,7 @@ type VendorStatus = Vendor['status'];
     .vendor-status-badge.vendor-status-review { background: #dbeafe; color: #1e40af; }
     .vendor-status-badge.vendor-status-inquiry { background: #e0e7ff; color: #3730a3; }
     .vendor-badge-pending { background: #fef3c7; color: #92400e; }
+    .vendor-badge-preferred { display: inline-flex; align-items: center; padding: 0 10px; min-height: 26px; border-radius: 4px; font-size: 11px; font-weight: 600; letter-spacing: 0.02em; background: #fef3c7; color: #92400e; }
     .vendor-detail-badges-row { margin-bottom: 12px; }
     .vendor-detail-badges-row .vendor-settings-label-text { margin-bottom: 4px; }
     .vendor-settings-field { margin-bottom: 12px; }
@@ -422,6 +460,16 @@ type VendorStatus = Vendor['status'];
     .vendor-btn-add-contact { width: 100%; padding: 8px 16px; background: transparent; color: #16a34a; border: 1px dashed #16a34a; border-radius: 6px; font-size: 14px; font-weight: 500; cursor: pointer; }
     .vendor-btn-add-contact:hover { background: #f0fdf4; }
     .vendor-input-inline { width: 100%; max-width: 100%; margin-top: 8px; padding: 8px 12px; border: 1px solid var(--vendor-panel-border); border-radius: 4px; font-size: 14px; box-sizing: border-box; }
+    .vendor-links-list { margin-bottom: 12px; }
+    .vendor-link-row { display: flex; flex-direction: column; gap: 2px; margin-bottom: 10px; }
+    .vendor-link-label { font-size: 12px; font-weight: 500; color: var(--vendor-text-muted); }
+    .vendor-link-url { font-size: 14px; color: var(--vendor-primary); text-decoration: none; word-break: break-all; }
+    .vendor-link-url:hover { text-decoration: underline; }
+    .vendor-links-edit-list { margin-bottom: 12px; }
+    .vendor-link-edit-row { display: flex; gap: 8px; align-items: center; margin-bottom: 10px; flex-wrap: wrap; }
+    .vendor-link-edit-row .vendor-modal-input { flex: 1; min-width: 0; }
+    .vendor-link-edit-label { max-width: 160px; }
+    .vendor-link-edit-url { flex: 2; min-width: 180px; }
     .vendor-btn-add { width: 100%; padding: 10px 16px; background: #16a34a; color: #fff; border: none; border-radius: 6px; font-size: 14px; font-weight: 500; cursor: pointer; }
     .vendor-btn-add:hover { background: #15803d; }
     .vendor-btn-primary { padding: 8px 16px; background: #1976d2; color: #fff; border: none; border-radius: 6px; font-size: 14px; font-weight: 500; cursor: pointer; }
@@ -482,6 +530,10 @@ type VendorStatus = Vendor['status'];
     .vendor-modal-card-heading { margin: 0; padding: 12px 20px; font-size: 14px; font-weight: 600; color: #334155; background: #e2e8f0; }
     .vendor-modal-card > .vendor-modal-field,
     .vendor-modal-card > .vendor-modal-row { padding: 0 20px 16px 20px; }
+    .vendor-modal-card > .vendor-modal-hint,
+    .vendor-modal-card > .vendor-links-edit-list,
+    .vendor-modal-card > .vendor-btn-add-contact { padding-left: 20px; padding-right: 20px; padding-bottom: 16px; }
+    .vendor-modal-card > .vendor-links-edit-list { padding-top: 16px; }
     .vendor-modal-card > .vendor-modal-field:first-of-type,
     .vendor-modal-card > .vendor-modal-row:first-of-type { padding-top: 16px; }
     .vendor-modal-field { margin-bottom: 16px; }
@@ -497,6 +549,8 @@ type VendorStatus = Vendor['status'];
     .vendor-contract-types .vendor-checkbox-field { display: flex; flex-direction: column; gap: 6px; min-width: 140px; }
     .vendor-contract-types .vendor-modal-label { display: flex; align-items: center; gap: 8px; margin-bottom: 0; cursor: pointer; }
     .vendor-contract-types .vendor-modal-label input[type="checkbox"] { margin: 0; }
+    .vendor-modal-field.vendor-checkbox-field .vendor-modal-label { display: flex; align-items: center; gap: 8px; cursor: pointer; }
+    .vendor-modal-field.vendor-checkbox-field .vendor-modal-label input[type="checkbox"] { margin: 0; }
     .vendor-contract-types .vendor-modal-input { max-width: 120px; }
   `],
 })
@@ -525,6 +579,9 @@ export class VendorDetailComponent {
     contractOnFile: 'No' as 'Yes' | 'No',
     pricing: '' as PricingOption,
     restrictions: 'No Restrictions' as Restrictions,
+    preferredPartner: false as boolean,
+    website: '' as string,
+    links: [] as VendorLink[],
     onboardingPackage: '' as string,
     monthlyApi: '' as string,
     supportPlan: '' as string,
@@ -585,6 +642,9 @@ export class VendorDetailComponent {
       contractOnFile: 'No',
       pricing: '' as PricingOption,
       restrictions: 'No Restrictions',
+      preferredPartner: false,
+      website: '',
+      links: [],
       onboardingPackage: '',
       monthlyApi: '',
       supportPlan: '',
@@ -621,6 +681,9 @@ export class VendorDetailComponent {
       contractOnFile: v.contractOnFile,
       pricing: v.pricing,
       restrictions: v.restrictions,
+      preferredPartner: !!v.preferredPartner,
+      website: v.website ?? '',
+      links: (v.links && v.links.length) ? v.links.map(l => ({ label: l.label, url: l.url })) : [],
       onboardingPackage: '',
       monthlyApi: '',
       supportPlan: '',
@@ -657,6 +720,16 @@ export class VendorDetailComponent {
     if (wasPrimary && this.form.contacts.length > 0) this.form.contacts[0].isPrimary = true;
   }
 
+  addLink() {
+    this.form.links = this.form.links || [];
+    this.form.links.push({ label: '', url: '' });
+  }
+
+  removeLink(index: number) {
+    if (!this.form.links) return;
+    this.form.links.splice(index, 1);
+  }
+
   get linkedIntegrations(): Integration[] {
     return this.integrationService.getByVendor(this.form.name);
   }
@@ -682,6 +755,25 @@ export class VendorDetailComponent {
   }
 
   onSave() {
-    // POC: no persistence; could navigate back or show toast
+    if (this.vendor) {
+      const primary = this.form.contacts.find(c => c.isPrimary) ?? this.form.contacts[0];
+      this.vendorService.update(this.vendor.id, {
+        name: this.form.name,
+        status: this.form.status,
+        v2: this.form.v2,
+        v3: this.form.v3,
+        contact: primary?.name ?? '',
+        email: primary?.email ?? '',
+        ndaOnFile: this.form.ndaOnFile,
+        contractOnFile: this.form.contractOnFile,
+        pricing: this.form.pricing || 'N/A',
+        restrictions: this.form.restrictions,
+        preferredPartner: this.form.preferredPartner,
+        website: this.form.website || undefined,
+        links: (this.form.links && this.form.links.length) ? this.form.links.filter(l => l.url?.trim()) : undefined,
+      });
+      this.vendor = this.vendorService.getById(String(this.vendor.id)) ?? this.vendor;
+    }
+    this.showEditModal = false;
   }
 }
