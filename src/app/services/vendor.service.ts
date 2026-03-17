@@ -57,6 +57,7 @@ const VENDORS: Vendor[] = [
   { id: 24, name: 'Gorilla Dash', status: 'Active Vendor', v2: 'Yes', v3: 'Yes', contact: 'Anthony Gherghetta', email: 'anthony@gorilladash.com', ndaOnFile: 'Yes', contractOnFile: 'Yes', pricing: 'Rev Share', restrictions: 'Franchise', preferredPartner: false, website: 'https://gorilladash.com' },
   { id: 25, name: 'Text Control', status: 'Active Vendor', v2: 'No', v3: 'Yes', contact: '', email: '', ndaOnFile: 'No', contractOnFile: 'Yes', pricing: 'Contract', restrictions: 'No Restrictions', preferredPartner: false, website: 'https://www.textcontrol.com' },
   { id: 26, name: 'Qrvey', status: 'Active Vendor', v2: 'No', v3: 'Yes', contact: 'Natan Cohen', email: 'natan@qrvey.com', ndaOnFile: 'Yes', contractOnFile: 'Yes', pricing: 'Contract', restrictions: 'No Restrictions', preferredPartner: false, website: 'https://www.qrvey.com' },
+  { id: 27, name: 'B2 Portal', status: 'Active Vendor', v2: 'Yes', v3: 'Yes', contact: 'Jackson Lefebvre', email: '', ndaOnFile: 'Yes', contractOnFile: 'Yes', pricing: 'Rev Share', restrictions: 'No Restrictions', preferredPartner: false },
 ];
 
 @Injectable({ providedIn: 'root' })

@@ -174,14 +174,14 @@ type VendorStatus = Vendor['status'];
                 <thead>
                   <tr>
                     <th>Name</th>
-                    <th>Product</th>
+                    <th>Category</th>
                     <th>Status</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr *ngFor="let int of linkedIntegrations">
                     <td>{{ int.name }}</td>
-                    <td>{{ int.product || '—' }}</td>
+                    <td>{{ int.category || '—' }}</td>
                     <td><span class="vendor-status-dot">{{ int.implementationStatus }}</span></td>
                   </tr>
                 </tbody>

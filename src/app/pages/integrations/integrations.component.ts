@@ -20,7 +20,7 @@ import { IntegrationService, Integration } from '../../services/integration.serv
             <a routerLink="/integrations/new" class="vendor-btn-primary">+ Add Integration</a>
           </div>
           <p class="vendor-page-subtitle">
-            Details about each integration: vendor, product support, and implementation status.
+            Details about each integration: vendor, category, and implementation status.
           </p>
         </div>
       </div>
@@ -52,7 +52,7 @@ import { IntegrationService, Integration } from '../../services/integration.serv
             <tr>
               <th>Name</th>
               <th>Vendor</th>
-              <th>Product</th>
+              <th>Category</th>
               <th>CoreBridge</th>
               <th>Implementation status</th>
               <th>Implemented by</th>
@@ -67,7 +67,7 @@ import { IntegrationService, Integration } from '../../services/integration.serv
                 </div>
               </td>
               <td>{{ integration.vendor || '—' }}</td>
-              <td>{{ integration.product || '—' }}</td>
+              <td>{{ integration.category || '—' }}</td>
               <td>
                 <div class="vendor-platform-badges">
                   <span *ngIf="integration.v2" class="vendor-platform-badge vendor-badge-yes" title="V2">V2</span>
@@ -303,7 +303,7 @@ export class IntegrationsComponent {
         const matchesSearch = !q ||
           integration.name.toLowerCase().includes(q) ||
           integration.vendor.toLowerCase().includes(q) ||
-          (integration.product && integration.product.toLowerCase().includes(q));
+          (integration.category && integration.category.toLowerCase().includes(q));
         const matchesPlatform =
           !this.platformFilter ||
           (this.platformFilter === 'V2' && integration.v2 && !integration.v3) ||
